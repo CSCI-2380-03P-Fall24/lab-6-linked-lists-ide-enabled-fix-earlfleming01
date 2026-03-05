@@ -6,7 +6,8 @@
 	// so be sure that the "next" Node is linked to a nullptr
 Node::Node(string s) 
 {
-
+	data = s;
+	next = nullptr;
 }
 
 //constructor : initiazlize the head and tail field from LLStack class 
@@ -14,7 +15,9 @@ Node::Node(string s)
 	// the head and tail should both be initialized as null pointers
 LLStack::LLStack()
 {
-
+	head = nullptr;
+	tail = nullptr;
+	count = 0;
 }
 
 /*
@@ -24,7 +27,10 @@ LLStack::LLStack()
 */
 string LLStack::top()
 {
-	return "fixthis";
+	if(head!= nullptr) {
+		return head -> data;
+	}
+	return "";
 }
 
 /*
@@ -32,7 +38,7 @@ string LLStack::top()
 */
 int LLStack::size()
 {
-	return -1;
+	return count;
 }
 
 /*
@@ -45,7 +51,17 @@ int LLStack::size()
 */
 void LLStack::push(string s)
 {
+	Node* newNode = new Node(s);
 
+	if(head==nullptr){
+		tail = newNode;
+		head = tail;
+	}
+	else{
+		newNode->next = head;
+		head = newNode;
+	}
+	 count++;
 }
 
 /*
@@ -57,7 +73,18 @@ void LLStack::push(string s)
 */
 void LLStack::pop()
 {
+	if(head == nullptr){
+		return;
+	}
 
+	Node* temp = head;
+	head = head->next;
+	delete temp;
+	count--;
+
+	if(head == nullptr){
+		tail = nullptr;
+	}
 }
 
 /*
@@ -82,6 +109,46 @@ void LLStack::pop()
 */
 int LLStack::removeAll(const string& target) 
 {
-	return -1;
+	int removed = 0;
+
+    // remove from front while matches
+    while (head != nullptr && head->data == target)
+    {
+        Node* temp = head;
+        head = head->next;
+        delete temp;
+        removed++;
+        count--;
+    }
+
+    if (head == nullptr)
+    {
+        tail = nullptr;
+        return removed;
+    }
+
+    Node* curr = head;
+
+    while (curr->next != nullptr)
+    {
+        if (curr->next->data == target)
+        {
+            Node* temp = curr->next;
+            curr->next = temp->next;
+
+            if (temp == tail)
+                tail = curr;
+
+            delete temp;
+            removed++;
+            count--;
+        }
+        else
+        {
+            curr = curr->next;
+        }
+    }
+
+    return removed;
 }
 
